@@ -1,12 +1,15 @@
 require "rubygems"
 require "zmq"
 
+queue_location = "tcp://127.0.0.1:8000"
+
 z = ZMQ::Context.new
 s = z.socket(ZMQ::REQ)
-s.connect("tcp://127.0.0.1:4010")
-s.connect("tcp://127.0.0.1:4011")
+s.connect queue_location
 
-10.times do |c|
-  puts s.send(c.to_s)
-  puts s.recv()
+c = 0
+loop do
+  s.send(c.to_s)
+  s.recv()
+  c = c+1
 end
